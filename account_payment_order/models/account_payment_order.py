@@ -542,9 +542,9 @@ class AccountPaymentOrder(models.Model):
         am_obj = self.env["account.move"]
         mvals = self._prepare_move(blines)
         move = am_obj.create(mvals)
-        blines.reconcile_payment_lines()
         if post_move:
             move.post()
+        blines.reconcile_payment_lines()
 
     def _prepare_trf_moves(self):
         """
