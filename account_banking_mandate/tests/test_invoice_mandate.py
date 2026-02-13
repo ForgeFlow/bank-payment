@@ -5,13 +5,12 @@ from unittest.mock import patch
 
 from odoo import fields
 from odoo.exceptions import UserError
-from odoo.tests.common import TransactionCase, tagged
+from odoo.tests.common import TransactionCase
 
 from odoo.addons.account.models.account_payment_method import AccountPaymentMethod
 from odoo.addons.base.tests.common import DISABLED_MAIL_CONTEXT
 
 
-@tagged("post_install", "-at_install")
 class TestInvoiceMandate(TransactionCase):
     def test_post_invoice_01(self):
         self.assertEqual(self.invoice.mandate_id, self.mandate)
@@ -209,16 +208,6 @@ class TestInvoiceMandate(TransactionCase):
         res = super().setUpClass()
         cls.env = cls.env(context=dict(cls.env.context, **DISABLED_MAIL_CONTEXT))
         cls.company = cls.env.ref("base.main_company")
-        if not cls.company.chart_template_id:
-            # Load a CoA if there's none in the company
-            coa = cls.env.ref("l10n_generic_coa.configurable_chart_template", False)
-            if not coa:
-                # Load the first available CoA
-                coa = cls.env["account.chart.template"].search(
-                    [("visible", "=", True)], limit=1
-                )
-            coa.try_loading(company=cls.company, install_demo=False)
-
         cls.partner = cls._create_res_partner("Peter with ACME Bank")
         cls.acme_bank = cls._create_res_bank(
             "ACME Bank", "GEBABEBB03B", "Charleroi", cls.env.ref("base.be")
@@ -279,18 +268,12 @@ class TestInvoiceMandate(TransactionCase):
             )
             .id
         )
-        cls.product = cls.env["product.product"].create(
-            {
-                "name": "Test product",
-                "type": "service",
-            }
-        )
         invoice_vals = [
             (
                 0,
                 0,
                 {
-                    "product_id": cls.product.id,
+                    "product_id": cls.env.ref("product.product_product_4").id,
                     "quantity": 1.0,
                     "account_id": invoice_line_account,
                     "price_unit": 200.00,

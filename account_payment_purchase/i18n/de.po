@@ -10,20 +10,19 @@ msgstr ""
 "Project-Id-Version: Odoo Server 9.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-05-17 02:46+0000\n"
-"PO-Revision-Date: 2025-03-17 19:06+0000\n"
-"Last-Translator: davidbeckercbl <becker@cbl-computer.de>\n"
+"PO-Revision-Date: 2017-05-17 02:46+0000\n"
+"Last-Translator: Rudolf Schnapka <rs@techno-flex.de>, 2017\n"
 "Language-Team: German (https://www.transifex.com/oca/teams/23907/de/)\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.10.2\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_payment_purchase
 #: model:ir.model,name:account_payment_purchase.model_account_move
 msgid "Journal Entry"
-msgstr "Buchungssatz"
+msgstr ""
 
 #. module: account_payment_purchase
 #: model:ir.model.fields,field_description:account_payment_purchase.field_purchase_order__payment_mode_id
@@ -51,7 +50,7 @@ msgstr ""
 #: code:addons/account_payment_purchase/models/account_move.py:0
 #, python-format
 msgid "Selected purchase order have different payment mode."
-msgstr "Ausgewählte Bestellungen haben unterschiedliche Zahlungsmethoden."
+msgstr ""
 
 #. module: account_payment_purchase
 #. odoo-python
@@ -59,7 +58,6 @@ msgstr "Ausgewählte Bestellungen haben unterschiedliche Zahlungsmethoden."
 #, python-format
 msgid "Selected purchase order have different supplier bank."
 msgstr ""
-"Die ausgewählte Bestellung hat eine abweichende Lieferanten-Bankverbindung."
 
 #. module: account_payment_purchase
 #: model:ir.model.fields,field_description:account_payment_purchase.field_purchase_order__supplier_partner_bank_id
