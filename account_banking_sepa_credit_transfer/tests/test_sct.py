@@ -319,7 +319,6 @@ class TestSCT(AccountTestInvoicingCommon):
                 inv.currency_id.compare_amounts(inv.amount_residual, 0.0),
                 0,
             )
-        return
 
     def test_usd_currency_sct(self):
         # Set a currency_exchange_journal on the company to avoid an exception
@@ -408,7 +407,6 @@ class TestSCT(AccountTestInvoicingCommon):
                 inv.currency_id.compare_amounts(inv.amount_residual, 0.0),
                 0,
             )
-        return
 
     @classmethod
     def create_invoice(

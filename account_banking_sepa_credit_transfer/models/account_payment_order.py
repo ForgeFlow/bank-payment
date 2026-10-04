@@ -12,7 +12,7 @@ from odoo.exceptions import UserError
 class AccountPaymentOrder(models.Model):
     _inherit = "account.payment.order"
 
-    def generate_payment_file(self):  # noqa: C901
+    def generate_payment_file(self):
         """Creates the SEPA Credit Transfer file. That's the important code!"""
         self.ensure_one()
         if self.payment_method_id.code != "sepa_credit_transfer":
@@ -42,15 +42,11 @@ class AccountPaymentOrder(models.Model):
             # and we put 70 and not 140
             name_maxsize = 70
             root_xml_tag = "CstmrCdtTrfInitn"
-        elif pain_flavor.startswith("pain.001.001.04"):
-            bic_xml_tag = "BICFI"
-            name_maxsize = 140
-            root_xml_tag = "CstmrCdtTrfInitn"
-        elif pain_flavor.startswith("pain.001.001.05"):
-            bic_xml_tag = "BICFI"
-            name_maxsize = 140
-            root_xml_tag = "CstmrCdtTrfInitn"
-        elif pain_flavor.startswith("pain.001.001.09"):
+        elif (
+            pain_flavor.startswith("pain.001.001.04")
+            or pain_flavor.startswith("pain.001.001.05")
+            or pain_flavor.startswith("pain.001.001.09")
+        ):
             bic_xml_tag = "BICFI"
             name_maxsize = 140
             root_xml_tag = "CstmrCdtTrfInitn"
