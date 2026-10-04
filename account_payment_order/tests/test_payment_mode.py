@@ -8,6 +8,8 @@ from odoo.addons.base.tests.common import BaseCommon
 
 
 class TestPaymentMode(BaseCommon):
+    _test_user_groups = ("account.group_account_manager",)
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -71,19 +73,15 @@ class TestPaymentMode(BaseCommon):
         self.payment_mode_c1.payment_method_id_change()
         self.assertTrue(
             all(
-                [
-                    journal.type in ["sale_refund", "sale"]
-                    for journal in self.payment_mode_c1.default_journal_ids
-                ]
+                journal.type in ["sale_refund", "sale"]
+                for journal in self.payment_mode_c1.default_journal_ids
             )
         )
         self.payment_mode_c1.payment_method_id = self.manual_out
         self.payment_mode_c1.payment_method_id_change()
         self.assertTrue(
             all(
-                [
-                    journal.type in ["purchase_refund", "purchase"]
-                    for journal in self.payment_mode_c1.default_journal_ids
-                ]
+                journal.type in ["purchase_refund", "purchase"]
+                for journal in self.payment_mode_c1.default_journal_ids
             )
         )

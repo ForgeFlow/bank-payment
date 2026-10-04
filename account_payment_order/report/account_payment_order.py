@@ -2,7 +2,6 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
 from odoo import api, models
-from odoo.tools.misc import formatLang
 
 
 class AccountPaymentOrderReport(models.AbstractModel):
@@ -21,7 +20,6 @@ class AccountPaymentOrderReport(models.AbstractModel):
             "data": data,
             "env": self.env,
             "get_bank_account_name": self.get_bank_account_name,
-            "formatLang": formatLang,
         }
 
     @api.model
@@ -34,9 +32,9 @@ class AccountPaymentOrderReport(models.AbstractModel):
         if partner_bank:
             name = ""
             if partner_bank.bank_name:
-                name = f"{partner_bank.bank_id.name}: "
-            if partner_bank.acc_number:
-                name = f"{name} {partner_bank.acc_number}"
+                name = f"{partner_bank.bank_name}: "
+            if partner_bank.account_number:
+                name = f"{name} {partner_bank.account_number}"
                 if partner_bank.bank_bic:
                     name = f"{name} - "
             if partner_bank.bank_bic:
