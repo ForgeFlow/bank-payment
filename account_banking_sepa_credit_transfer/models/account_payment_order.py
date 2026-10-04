@@ -42,10 +42,8 @@ class AccountPaymentOrder(models.Model):
             # and we put 70 and not 140
             name_maxsize = 70
             root_xml_tag = "CstmrCdtTrfInitn"
-        elif (
-            pain_flavor.startswith("pain.001.001.04")
-            or pain_flavor.startswith("pain.001.001.05")
-            or pain_flavor.startswith("pain.001.001.09")
+        elif pain_flavor.startswith(
+            ("pain.001.001.04", "pain.001.001.05", "pain.001.001.09")
         ):
             bic_xml_tag = "BICFI"
             name_maxsize = 140
@@ -77,7 +75,7 @@ class AccountPaymentOrder(models.Model):
         pain_root = etree.SubElement(xml_root, root_xml_tag)
         # A. Group header
         header = self.generate_group_header_block(pain_root, gen_args)
-        group_header, nb_of_transactions_a, control_sum_a = header
+        _group_header, nb_of_transactions_a, control_sum_a = header
         transactions_count_a = 0
         amount_control_sum_a = 0.0
         lines_per_group = {}

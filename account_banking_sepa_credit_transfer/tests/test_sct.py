@@ -4,7 +4,6 @@
 # Copyright 2026 Therp BV <https://therp.nl>.
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
-import base64
 import time
 
 from lxml import etree
@@ -63,38 +62,14 @@ class TestSCT(AccountTestInvoicingCommon):
         ).write({"property_account_payable_id": cls.account_payable.id})
         cls.general_journal = cls.company_data["default_journal_misc"]
         cls.purchase_journal = cls.company_data["default_journal_purchase"]
-        cls.bank = cls.env["res.bank"].create(
-            {
-                "name": "La Banque Postale",
-                "bic": "PSSTFRPPXXX",
-                "street": "115 rue de Sèvres",
-                "zip": "75007",
-                "city": "Paris",
-                "country": cls.env.ref("base.fr").id,
-            }
-        )
-        cls.bank_1 = cls.env["res.bank"].create(
-            {
-                "name": "La Banque Postale",
-                "bic": "PSSTFRPPXXX",
-                "street": "115 rue de Sèvres",
-                "zip": "75007",
-                "city": "Paris",
-                "country": cls.env.ref("base.fr").id,
-            }
-        )
-        cls.bank_2 = cls.env["res.bank"].create(
-            {
-                "name": "BNP Paribas Fortis Charleroi",
-                "bic": "GEBABEBB03A",
-                "city": "Charleroi",
-                "country": cls.env.ref("base.be").id,
-            }
-        )
         cls.partner_bank = cls.env["res.partner.bank"].create(
             {
-                "acc_number": "ES52 0182 2782 5688 3882 1868",
-                "bank_id": cls.bank.id,
+                "account_number": "ES52 0182 2782 5688 3882 1868",
+                "bank_name": "La Banque Postale",
+                "bank_bic": "PSSTFRPPXXX",
+                "street": "115 rue de Sèvres",
+                "zip": "75007",
+                "city": "Paris",
                 "partner_id": cls.main_company.partner_id.id,
                 "company_id": cls.main_company.id,
             }
@@ -106,8 +81,12 @@ class TestSCT(AccountTestInvoicingCommon):
         )
         cls.partner_bank_1 = cls.env["res.partner.bank"].create(
             {
-                "acc_number": "FR66 1212 1212 1212 1212 1212 121",
-                "bank_id": cls.bank.id,
+                "account_number": "FR66 1212 1212 1212 1212 1212 121",
+                "bank_name": "La Banque Postale",
+                "bank_bic": "PSSTFRPPXXX",
+                "street": "115 rue de Sèvres",
+                "zip": "75007",
+                "city": "Paris",
                 "partner_id": cls.partner_1.id,
                 "allow_out_payment": True,
             }
@@ -119,8 +98,10 @@ class TestSCT(AccountTestInvoicingCommon):
         )
         cls.partner_bank_2 = cls.env["res.partner.bank"].create(
             {
-                "acc_number": "BE96 9988 7766 5544",
-                "bank_id": cls.bank_2.id,
+                "account_number": "BE96 9988 7766 5544",
+                "bank_name": "BNP Paribas Fortis Charleroi",
+                "bank_bic": "GEBABEBB03A",
+                "city": "Charleroi",
                 "partner_id": cls.partner_2.id,
             }
         )
@@ -128,7 +109,6 @@ class TestSCT(AccountTestInvoicingCommon):
         cls.bank_journal.write(
             {
                 "bank_account_id": cls.partner_bank.id,
-                "bank_id": cls.partner_bank.bank_id.id,
                 "outbound_payment_method_line_ids": [
                     Command.create(
                         {
@@ -156,8 +136,6 @@ class TestSCT(AccountTestInvoicingCommon):
                 "fixed_journal_id": cls.bank_journal.id,
             }
         )
-        # Trigger the recompute of account type on res.partner.bank
-        cls.partner_bank_model.search([])._compute_acc_type()
 
     def test_no_pain(self):
         self.payment_mode.payment_method_id.pain_version = False
@@ -283,7 +261,7 @@ class TestSCT(AccountTestInvoicingCommon):
         self.assertEqual(action["res_model"], "ir.attachment")
         attachment = self.attachment_model.browse(action["res_id"])
         self.assertEqual(attachment.name[-4:], ".xml")
-        xml_file = base64.b64decode(attachment.datas)
+        xml_file = attachment.raw.content
         xml_root = etree.fromstring(xml_file)
         namespaces = xml_root.nsmap
         namespaces["p"] = xml_root.nsmap[None]
@@ -309,7 +287,7 @@ class TestSCT(AccountTestInvoicingCommon):
         )
         self.assertEqual(
             debtor_acc_xpath[0].text,
-            self.payment_order.company_partner_bank_id.sanitized_acc_number,
+            self.payment_order.company_partner_bank_id.sanitized_account_number,
         )
         self.payment_order.generated2uploaded()
         self.assertEqual(self.payment_order.state, "uploaded")
@@ -381,7 +359,7 @@ class TestSCT(AccountTestInvoicingCommon):
         self.assertEqual(action["res_model"], "ir.attachment")
         attachment = self.attachment_model.browse(action["res_id"])
         self.assertEqual(attachment.name[-4:], ".xml")
-        xml_file = base64.b64decode(attachment.datas)
+        xml_file = attachment.raw.content
         xml_root = etree.fromstring(xml_file)
         namespaces = xml_root.nsmap
         namespaces["p"] = xml_root.nsmap[None]
@@ -397,7 +375,7 @@ class TestSCT(AccountTestInvoicingCommon):
         )
         self.assertEqual(
             debtor_acc_xpath[0].text,
-            self.payment_order.company_partner_bank_id.sanitized_acc_number,
+            self.payment_order.company_partner_bank_id.sanitized_account_number,
         )
         self.payment_order.generated2uploaded()
         self.assertEqual(self.payment_order.state, "uploaded")
