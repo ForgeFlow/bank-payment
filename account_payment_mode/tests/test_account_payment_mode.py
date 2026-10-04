@@ -10,6 +10,12 @@ from odoo.addons.base.tests.common import BaseCommon
 
 @tagged("post_install", "-at_install")
 class TestAccountPaymentMode(BaseCommon):
+    _test_user_groups = (
+        "account.group_account_manager",
+        "base.group_partner_manager",
+        "base.group_multi_company",
+    )
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
